@@ -1,5 +1,4 @@
 import { getCorsHeaders, isDisallowedOrigin } from './_cors.js';
-import { validateApiKey } from './_api-key.js';
 import { jsonResponse } from './_json-response.js';
 
 export const config = { runtime: 'edge' };
@@ -120,9 +119,8 @@ export default async function handler(req) {
   if (req.method === 'OPTIONS')
     return new Response(null, { status: 204, headers: cors });
 
-  const apiKeyResult = validateApiKey(req);
-  if (apiKeyResult.required && !apiKeyResult.valid)
-    return jsonResponse({ error: apiKeyResult.error }, 401, cors);
+  // Bootstrap serves read-only cached data — no API key required.
+  // Bot protection is handled by middleware (PUBLIC_API_PATHS allowlist).
 
   const url = new URL(req.url);
   const tier = url.searchParams.get('tier');

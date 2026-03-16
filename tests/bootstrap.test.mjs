@@ -145,8 +145,8 @@ describe('Bootstrap endpoint (api/bootstrap.js)', () => {
     assert.ok(src.includes('stale-while-revalidate'), 'Missing stale-while-revalidate');
   });
 
-  it('validates API key for desktop origins', () => {
-    assert.ok(src.includes('validateApiKey'), 'Missing API key validation');
+  it('serves public data without API key requirement', () => {
+    assert.ok(!src.includes('validateApiKey'), 'Bootstrap should not require API key — it serves read-only cached data');
   });
 
   it('handles CORS preflight', () => {
